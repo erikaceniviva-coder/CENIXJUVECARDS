@@ -1,22 +1,16 @@
 # CENIXJUVECARDS
 
-Official Juventus football cards collection.
+## 🌐 VISITA IL SITO UFFICIALE
 
-## 🌐 WEBSITE
+[🚀 APRI CENIXJUVECARDS](https://cenixjuvecards.onrender.com)
 
-**[VISITA CENIXJUVECARDS](https://github.com/erikaceniviva-coder/CENIXJUVECARDS)**
+Applicazione realizzata in Python con Flask.
 
-## 🐍 TECHNOLOGY
-
+## Tecnologie
 - Python
 - Flask
 - HTML
 - CSS
 - JavaScript
 
-## 🚀 PROJECT
-
-Premium Juventus trading cards collection with pack opening and legends.
-
----
 © 2026 CENIXJUVECARDS. All rights reserved.
