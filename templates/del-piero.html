@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>THE IMMORTAL 001 | CENIX</title>
+<style>
+* {box-sizing:border-box}
+
+body {
+    margin:0;
+    min-height:100vh;
+    background:radial-gradient(ellipse at top,#333943,#090a0d 70%);
+    color:white;
+    font-family:Arial,sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:35px 15px;
+}
+
+.brand {
+    letter-spacing:8px;
+    color:#c4c9d1;
+    margin-bottom:25px;
+}
+
+.card-scene {
+    width:310px;
+    height:470px;
+    perspective:1200px;
+}
+
+.card {
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:transform .8s cubic-bezier(.2,.8,.2,1);
+    cursor:pointer;
+}
+
+.card.flipped {
+    transform:rotateY(180deg);
+}
+
+.face {
+    position:absolute;
+    inset:0;
+    border:2px solid #c6cbd3;
+    border-radius:20px;
+    backface-visibility:hidden;
+    overflow:hidden;
+    background:linear-gradient(145deg,#dce0e5,#545b66 30%,#101216 70%,#aeb4bd);
+    box-shadow:0 25px 70px #000,0 0 25px #d9dee533;
+}
+
+.front {
+    padding:14px;
+}
+
+.front::before {
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg,transparent 25%,#ffffff50 48%,transparent 65%);
+    transform:translateX(-100%);
+    animation:shine 4s infinite;
+    pointer-events:none;
+    z-index:3;
+}
+
+@keyframes shine {
+    50%,100% {transform:translateX(100%)}
+}
+
+.edition {
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    letter-spacing:2px;
+    color:#fff;
+}
+
+.player-photo {
+    height:315px;
+    margin-top:12px;
+    border:1px solid #ffffff80;
+    background:linear-gradient(180deg,#333943,#101216);
+    overflow:hidden;
+}
+
+.player-photo img {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:top;
+    filter:grayscale(100%) contrast(1.15);
+}
+
+.player-name {
+    font-size:23px;
+    font-weight:900;
+    margin:12px 0 4px;
+    letter-spacing:1px;
+}
+
+.details {
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#d9dce2;
+}
+
+.rating {
+    position:absolute;
+    top:40px;
+    right:22px;
+    font-size:34px;
+    font-weight:900;
+    color:white;
+    text-shadow:0 3px 15px #000;
+}
+
+.back {
+    transform:rotateY(180deg);
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.back h2 {
+    font-size:28px;
+    letter-spacing:3px;
+}
+
+.stat {
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #ffffff45;
+    font-size:13px;
+}
+
+.serial {
+    text-align:center;
+    font-size:24px;
+    letter-spacing:4px;
+    color:#e4e7ed;
+}
+
+button {
+    margin-top:30px;
+    padding:15px 30px;
+    border:1px solid #c5cad2;
+    background:linear-gradient(120deg,#d8dce3,#626975);
+    color:#08090c;
+    font-weight:bold;
+    letter-spacing:3px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="brand">CENIXJUVECARDS</div>
+
+<div class="card-scene">
+    <div class="card" id="card">
+
+        <section class="face front">
+            <div class="edition">
+                <span>LEGENDS COLLECTION</span>
+                <span>001/100</span>
+            </div>
+
+            <div class="rating">99</div>
+
+            <div class="player-photo">
+                <img src="/static/images/legends/del-piero.jpg"
+                     alt="Alessandro Del Piero"
+                     onerror="this.style.display='none'">
+            </div>
+
+            <div class="player-name">ALESSANDRO<br>DEL PIERO</div>
+
+            <div class="details">
+                <span>THE IMMORTAL</span>
+                <span>JUVENTUS</span>
+            </div>
+        </section>
+
+        <section class="face back">
+            <div>
+                <div class="edition">CENIX · LEGENDARY</div>
+                <h2>THE<br>IMMORTAL.</h2>
+                <p>IL CAPITANO. UNA LEGGENDA ETERNA.</p>
+                <div class="stat"><span>RUOLO</span><b>ATTACCANTE</b></div>
+                <div class="stat"><span>NUMERO</span><b>10</b></div>
+                <div class="stat"><span>GOL JUVENTUS</span><b>290</b></div>
+                <div class="stat"><span>PRESENZE</span><b>705</b></div>
+            </div>
+            <div class="serial">001 / 100</div>
+        </section>
+
+    </div>
+</div>
+
+<button onclick="document.getElementById('card').classList.toggle('flipped')">
+    GIRA LA CARTA
+</button>
+
+<p style="color:#aeb4bd;font-size:11px;letter-spacing:3px;margin-top:25px">
+LIMITED COLLECTOR EDITION
+</p>
+
+</body>
+</html>
