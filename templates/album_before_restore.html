@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CENIXJUVECARDS | MY ALBUM</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<style>
+body {
+    background:#090a0d;
+    color:white;
+    font-family:Arial,sans-serif;
+    padding:35px 6%;
+}
+h1 {font-size:clamp(32px,6vw,65px);letter-spacing:4px}
+.subtitle {color:#999faa;letter-spacing:3px}
+section {margin-top:55px}
+.pack-area {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:20px;
+    margin-top:25px;
+}
+.pack {
+    padding:28px;
+    border:1px solid #777;
+    border-radius:15px;
+    background:linear-gradient(145deg,#292d34,#101216);
+}
+.pack.legend {
+    border-color:#d6b968;
+    background:linear-gradient(145deg,#39301c,#111);
+}
+button {
+    padding:13px 20px;
+    border:0;
+    border-radius:7px;
+    background:#e5e5e5;
+    color:#111;
+    font-weight:bold;
+    cursor:pointer;
+}
+.legend button {background:#d6b968}
+.album-grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:20px;
+    margin-top:25px;
+}
+.album-card {
+    padding:14px;
+    background:linear-gradient(145deg,#292d34,#101216);
+    border:1px solid #858b96;
+    border-radius:12px;
+}
+.album-card.legend-card {border-color:#d6b968}
+.album-card img {
+    width:100%;
+    height:210px;
+    object-fit:cover;
+    object-position:top;
+}
+.rarity {letter-spacing:2px;font-size:11px}
+#result {margin-top:25px;color:#e6d69b;font-weight:bold}
+.empty {color:#999faa}
+</style>
+</head>
+<body>
+
+<p class="subtitle">CENIXJUVECARDS · COLLECTOR EDITION</p>
+<h1>MY <span style="color:#d6b968">ALBUM.</span></h1>
+<p>LA TUA COLLEZIONE · {{ cards|length }} CARTE DIVERSE</p>
+
+<section id="packs">
+<h2>JUVE COLLECTION</h2>
+<p>Le bustine dedicate ai giocatori della Juventus.</p>
+<div class="pack-area">
+    <div class="pack">
+        <h3>JUVE PACK</h3>
+        <p>Scopri una nuova figurina della rosa bianconera.</p>
+        <button onclick="openPack('normal')">APRI BUSTINA</button>
+    </div>
+</div>
+</section>
+
+<section id="legends-packs">
+<h2 style="color:#d6b968">LEGENDS COLLECTION</h2>
+<p>Le grandi leggende della storia bianconera, in una collezione speciale.</p>
+<div class="pack-area">
+    <div class="pack legend">
+        <h3>LEGENDS PACK</h3>
+        <p>Del Piero, Buffon, Platini, Zidane, Trezeguet e molte altre leggende.</p>
+        <button onclick="openPack('legends')">APRI LEGENDS PACK</button>
+    </div>
+</div>
+</section>
+
+<div id="result"></div>
+
+<section>
+<h2>IL MIO ALBUM</h2>
+<h3>JUVE COLLECTION</h3>
+<div class="album-grid">
+{% for card in cards if card.collection_type == 'JUVE' %}
+<article class="album-card">
+    <img src="{{ url_for('static', filename='images/players/' + card.slug + '.jpg') }}"
+         alt="{{ card.name }}" onerror="this.style.display='none'">
+    <p class="rarity">{{ card.rarity }}</p>
+    <h3>{{ card.name }}</h3>
+    <p>RATING {{ card.rating }}</p>
+    <p>QUANTITÀ: {{ card.quantity }}</p>
+</article>
+{% else %}
+<p class="empty">Non hai ancora figurine della Juve Collection.</p>
+{% endfor %}
+</div>
+</section>
+
+<section>
+<h3 style="color:#d6b968">LEGENDS COLLECTION</h3>
+<div class="album-grid">
+{% for card in cards if card.collection_type == 'LEGENDS' %}
+<article class="album-card legend-card">
+    <img src="{{ url_for('static', filename='images/legends/' + card.slug + '.jpg') }}"
+         alt="{{ card.name }}" onerror="this.style.display='none'">
+    <p class="rarity">{{ card.rarity }}</p>
+    <h3>{{ card.name }}</h3>
+    <p>RATING {{ card.rating }}</p>
+    <p>QUANTITÀ: {{ card.quantity }}</p>
+</article>
+{% else %}
+<p class="empty">Non hai ancora figurine Legends.</p>
+{% endfor %}
+</div>
+</section>
+
+<script>
+async function openPack(type) {
+    const result = document.getElementById("result");
+    result.textContent = "Apertura bustina in corso...";
+
+    try {
+        const response = await fetch("/api/open-pack", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({type: type})
+        });
+
+        const card = await response.json();
+
+        if (!response.ok) {
+            throw new Error(card.error || "Errore durante l'apertura");
+        }
+
+        result.textContent =
+            "✨ " + card.name + " — " + card.rarity +
+            " · RATING " + card.rating;
+
+        setTimeout(() => location.reload(), 1300);
+    } catch (error) {
+        result.textContent = error.message;
+    }
+}
+</script>
+</body>
+</html>

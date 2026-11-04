@@ -1,0 +1,75 @@
+import sqlite3
+from pathlib import Path
+
+DB = Path(__file__).parent / "collection.db"
+
+def connect():
+    return sqlite3.connect(DB)
+
+def initialize():
+    with connect() as db:
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS collection (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                slug TEXT NOT NULL,
+                name TEXT NOT NULL,
+                rarity TEXT NOT NULL,
+                rating INTEGER NOT NULL,
+                quantity INTEGER DEFAULT 1,
+                acquired_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                collection_type TEXT NOT NULL DEFAULT 'JUVE',
+                UNIQUE(slug, rarity)
+            )
+        """)
+
+        columns = [
+            row[1] for row in db.execute(
+                "PRAGMA table_info(collection)"
+            ).fetchall()
+        ]
+
+        if "collection_type" not in columns:
+            db.execute("""
+                ALTER TABLE collection
+                ADD COLUMN collection_type TEXT NOT NULL DEFAULT 'LEGENDS'
+            """)
+
+def add_card(card):
+    initialize()
+    with connect() as db:
+        db.execute("""
+            INSERT INTO collection
+            (slug, name, rarity, rating, collection_type)
+            VALUES (?, ?, ?, ?, ?)
+            ON CONFLICT(slug, rarity)
+            DO UPDATE SET quantity = quantity + 1
+        """, (
+            card["slug"],
+            card["name"],
+            card["rarity"],
+            card["rating"],
+            card.get("collection_type", "JUVE")
+        ))
+
+def get_collection():
+    initialize()
+    with connect() as db:
+        rows = db.execute("""
+            SELECT slug, name, rarity, rating, quantity, collection_type
+            FROM collection
+            ORDER BY name
+        """).fetchall()
+
+    return [
+        {
+            "slug": r[0],
+            "name": r[1],
+            "rarity": r[2],
+            "rating": r[3],
+            "quantity": r[4],
+            "collection_type": r[5]
+        }
+        for r in rows
+    ]
+
+initialize()
